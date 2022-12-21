@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block mycss %} 
+<style> 
+table, th, td {
+  border:1px solid black;
+}
+a { text-decoration: none; }
+</style> 
+{% endblock %}
+
+{% block profesori %}
+    {% if request.user.role_id == 1 %}
+        <a href="{% url 'login' %}">Logout </a>
+        <a href="{% url 'predmeti' %}">Predmeti </a>
+        <a href="{% url 'studenti' %}">Studenti </a>
+        <a href="{% url 'profesori' %}">Profesori</a>
+        <hr>
+
+        <h2>Popis profesora:</h2>
+        {% for profesor in data %}
+            {% if profesor.role_id == 2 %}
+                <b>{{ profesor.id }}</b>
+                <b>{{ profesor.first_name }}</b>
+                <b>{{ profesor.last_name }}</b>
+                <a href="{% url 'editProf' prof_id=profesor.id %}">edit</a>
+                <hr>
+            {% endif %}
+        {% endfor %}
+        <a href="{% url 'createStudentOrProfesor' %}">Dodaj profesora</a>
+    {% else %}
+        <h2>Nemate ovlasti za pristup sadržaju</h2>
+    {% endif %}
+{% endblock %}

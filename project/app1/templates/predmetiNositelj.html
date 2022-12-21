@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block predmetiNositelj %}
+    {% if request.user.role_id == 2 %}
+        <a href="{% url 'login' %}">Logout </a>
+        <a href="{% url 'predmetiNositelj' %}">Predmeti </a>
+            <hr>
+        <h2>Predmeti:</h2>
+        {% for predmet in data %}
+            {% if predmet.nositelj_id == id %}
+                <b>{{ predmet.name }}</b>
+                <a href="{% url 'studentiPoPredmetu' predmet_id=predmet.id %}">Studenti </a>
+                <a href="{% url 'editPredmet' predmet_id=predmet.id %}">Edit </a>
+                <hr>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+            <h2>Nemate ovlasti za pristup sadržaju</h2>
+    {% endif %}
+{% endblock %}

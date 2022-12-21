@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block mycss %} 
+<style> 
+table, th, td {
+  border:1px solid black;
+}
+a { text-decoration: none; }
+</style> 
+{% endblock %}
+
+{% block homeStudent %}
+    {% if request.user.role_id == 3 %}
+        <a href="{% url 'login' %}">Logout</a>
+        <a href="{% url 'predmeti' %}">Predmeti</a>
+        <hr>
+    {% else %}
+        <h2>Nemate ovlasti za pristup sadržaju</h2>
+    {% endif %}
+    
+    
+{% endblock %}

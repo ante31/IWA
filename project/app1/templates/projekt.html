@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block projekt %}
+    {% if request.user.role_id == 1 %}
+            <a href="{% url 'login' %}">Logout </a>
+            <a href="{% url 'predmeti' %}">Predmeti </a>
+            <a href="{% url 'studenti' %}">Studenti </a>
+            <a href="{% url 'profesori' %}">Profesori</a>
+            <a href="{% url 'projekt' %}">Studenti na zadnjoj godini</a>
+            <hr>
+        <h2>Studenti na zadnjoj godini</h2>
+        {% for student in data %}
+            <b>{{ student.id }}</b>
+            <b>{{ student.first_name }}</b>
+            <b>{{ student.last_name }}</b>
+            <b>{{ student.status }}</b>
+            <a href="{% url 'promjenaUpisnogLista' student_id=student.id %}">promijeni upisni list</a>
+            <a href="{% url 'editStudent' student_id=student.id %}">edit</a>
+            <hr>
+        {% endfor %}
+    {% endif %}
+{% endblock %}  

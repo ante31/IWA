@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block mycss %} 
+<style> 
+a { text-decoration: none; }
+</style> 
+{% endblock %}
+
+
+{% block studentiPoPredmetu %}
+{% load filter %}
+
+{% if request.user.role_id != 3 %}
+    {% if request.user.role_id == 1 %}
+        <a href="{% url 'login' %}">Logout </a>
+        <a href="{% url 'predmeti' %}">Predmeti </a>
+        <a href="{% url 'studenti' %}">Studenti </a>
+        <a href="{% url 'profesori' %}">Profesori</a>
+        <hr>
+    {% elif request.user.role_id == 2 %}
+        <a href="{% url 'login' %}">Logout </a>
+        <a href="{% url 'predmetiNositelj' %}">Predmeti </a>
+        <hr>
+    {% endif %}
+
+    <h2>{{predmet.name}}:</h2>
+    {% if count %}
+    <form action="{% url 'studentiPoPredmetu' predmet_id=predmet.id %}" method="post">
+        {% csrf_token %}
+        <select name='pregled'>
+            {% if 1|stringformat:"i" == pregled %}
+                <option value="1">Svi</option>
+            {% else %}
+                <option value="1">Svi</option>
+            {% endif %}
+            
+            {% if 2|stringformat:"i" == pregled %}
+                <option value="2" selected>Oni koji su položili</option>
+            {% else %}
+                <option value="2">Oni koji su položili</option>
+            {% endif %}
+            
+            {% if 3|stringformat:"i" == pregled %}
+                <option value="3" selected>Oni koji su izgubili pravo</option>
+            {% else %}
+                <option value="3">Oni koji su izgubili pravo</option>
+            {% endif %}
+        </select>
+        <Button type='submit'>Osvježi</Button>
+        </form>
+        <hr>
+        {% for student in studenti %}
+            {% for upis in upisi %}
+                
+                {% if student.id == upis.student_id_id %}
+                    <b>{{ student.id }}</b>
+                    <b>{{ student.first_name }}</b>
+                    <b>{{ student.last_name }}</b>
+                    <b>{{ student.status }}</b>
+                    <b>{{ upis.status }}</b>
+                    {% if request.user.role_id == 1 %}
+                        <a href="{% url 'promjenaUpisnogLista' student_id=student.id %}">promijeni upisni list</a>
+                        <a href="{% url 'editStudent' student_id=student.id %}">edit</a>
+                    {% elif request.user.role_id == 2 %}   
+                        <a href="{% url 'promjenaStatusa' predmet_id=upis.predmet_id_id student_id=student.id %}">promijeni status</a>
+                    {% endif %} 
+                    <hr>
+                {% endif %}
+            {% endfor %}    
+        {% endfor %}
+    {% else %}
+        <p>Nema studenata na ovom predmetu</p>
+    {% endif %}
+{% else %}
+    <h2>Nemate ovlasti za pristup sadržaju</h2>
+{% endif %}
+
+
+{% endblock %}

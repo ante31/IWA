@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block createStudentOrProfesor %}
+    {% if request.user.role_id == 1 %}
+        <a href="{% url 'login' %}">Logout </a>
+        <a href="{% url 'predmeti' %}">Predmeti </a>
+        <a href="{% url 'studenti' %}">Studenti </a>
+        <a href="{% url 'profesori' %}">Profesori</a>
+        <hr>
+
+        <h2>Create a new Student or Profesor!</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{form.as_p}}
+            <input type="submit" value="Create">
+        </form>
+    {% else %}
+        <h2>Nemate ovlasti za pristup sadržaju</h2>
+    {% endif %}
+    
+{% endblock %}  

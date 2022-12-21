@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block mycss %} 
+<style> 
+table, th, td {
+  border:1px solid black;
+}
+a { text-decoration: none; }
+</style> 
+{% endblock %}
+
+{% load filter %}
+{% block predmeti %}
+    {% if request.user.role_id != 2 %}
+        <a href="{% url 'login' %}">Logout </a>
+        <a href="{% url 'predmeti' %}">Predmeti </a>
+        <a href="{% url 'studenti' %}">Studenti </a>
+        <a href="{% url 'profesori' %}">Profesori</a>
+        <hr>
+        <h1>Upisni list od studenta {{student.username}}</h1>
+        <h2>Redovni:</h2>
+        {% for i in "123456" %}
+            <b>{{i}}. semestar</b>
+            {% if request.user.role_id == 1 %}
+                <table style="width:70%">
+            {% else %}
+                <table style="width:50%">  
+            {% endif %}
+                <tr>
+                    {% if request.user.role_id == 1 %}
+                        <th width=50%>Ime</th>
+                    {% else %}
+                        <th width=80%>Ime</th>
+                    {% endif %}
+                    <th>Kod</th>
+                    <th>Ects</th>
+                    <th>Izborni</th>
+                    <th>Status</th>
+                </tr>
+                {% for predmet in data %}
+                    {% if predmet.sem_red|stringformat:"i" == i %}
+                        <tr>
+                            <td><b>{{ predmet.name }}</b></td>
+                            <td><b>{{ predmet.kod }}</b></td>
+                            <td><b>{{ predmet.ects }}</b></td>
+                            <td><b>{{ predmet.izborni }}</b></td>
+                            <td><b>{{ student.id|upisIspis2:predmet.id }}</b></td>
+                            <td><a href ="{% url 'studentiPoPredmetu' predmet_id=predmet.id %}">vidi popis studenata</a></td>
+                            <td><a href="{% url 'editPredmet' predmet_id=predmet.id %}">edit</a></td>
+                            {% if student.id|upisIspis:predmet.id == 2 %}
+                                <td></td>
+                            {% elif student.id|upisIspis:predmet.id == 1 %}
+                                <td><a href ="{% url 'upis' predmet_id=predmet.id student_id=student.id %}">ispiši</a></td>
+                            {% else %}
+                                <td><a href ="{% url 'upis' predmet_id=predmet.id student_id=student.id %}">upiši</a></td>
+                            {% endif %} 
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </table>
+            <hr>
+        {% endfor %}
+
+        <h2>Izvanredni:</h2>
+        {% for i in "12345678" %}
+                <b>{{i}}. semestar</b>
+                {% if request.user.role_id == 1 %}
+                    <table style="width:70%">
+                {% else %}
+                    <table style="width:50%">  
+                {% endif %}
+                    <tr>
+                        {% if request.user.role_id == 1 %}
+                            <th width=50%>Ime</th>
+                        {% else %}
+                            <th width=80%>Ime</th>
+                        {% endif %}
+                        <th>Kod</th>
+                        <th>Ects</th>
+                        <th>Izborni</th>
+                        <th>Status</th>
+                    </tr>
+                    {% for predmet in data %}
+                        {% if predmet.sem_izv|stringformat:"i" == i %}
+                            <tr>
+                                <td><b>{{ predmet.name }}</b></td>
+                                <td><b>{{ predmet.kod }}</b></td>
+                                <td><b>{{ predmet.ects }}</b></td>
+                                <td><b>{{ predmet.izborni }}</b></td>
+                                <td><b>{{ student.id|upisIspis2:predmet.id }}</b></td>
+                                <td><a href ="{% url 'studentiPoPredmetu' predmet_id=predmet.id %}">vidi popis studenata</a></td>
+                                <td><a href="{% url 'editPredmet' predmet_id=predmet.id %}">edit</a></td>
+                                {% if student.id|upisIspis:predmet.id == 2 %}
+                                    <td></td>
+                                {% elif student.id|upisIspis:predmet.id == 1 %}
+                                    <td><a href ="{% url 'upis' predmet_id=predmet.id student_id=student.id %}">ispiši</a></td>
+                                {% else %}
+                                    <td><a href ="{% url 'upis' predmet_id=predmet.id student_id=student.id %}">upiši</a></td>
+                                {% endif %} 
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </table>
+                <hr>
+            {% endfor %}
+        <a href="{% url 'createPredmet' %}">Dodaj predmet</a>
+    {% else %}
+        <h2>Nemate ovlasti za pristup sadržaju</h2>
+    {% endif %}
+{% endblock %}

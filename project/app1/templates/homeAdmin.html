@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block mycss %} 
+<style> 
+table, th, td {
+  border:1px solid black;
+}
+a { text-decoration: none; }
+</style> 
+{% endblock %}
+
+{% block homeAdmin %}
+    {% if request.user.role_id == 1 %}
+        <a href="{% url 'login' %}">Logout </a>
+        <a href="{% url 'predmeti' %}">Predmeti </a>
+        <a href="{% url 'studenti' %}">Studenti </a>
+        <a href="{% url 'profesori' %}">Profesori</a>
+        <a href="{% url 'projekt' %}">Studenti na zadnjoj godini</a>
+        <hr>
+    {% else %}
+        <h2>Nemate ovlasti za pristup sadržaju</h2>
+    {% endif %}
+{% endblock %}
